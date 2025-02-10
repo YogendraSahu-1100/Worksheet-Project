@@ -26,7 +26,6 @@ export default function Login() {
   };
 
   const checkCredential = () => {
-    // email = email.toLowerCase();
     if(email === process.env.NEXT_PUBLIC_USERNAME){
       if(password === process.env.NEXT_PUBLIC_USERPASSWORD){
         return true;
