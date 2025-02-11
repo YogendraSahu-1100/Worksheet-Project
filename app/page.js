@@ -1,7 +1,8 @@
 "use client";
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import "./login.css";
 
 export default function Login() {
   const router = useRouter()
@@ -64,6 +65,7 @@ export default function Login() {
                 <label className="text-white-800 text-ms block mb-2">Email</label>
                 <div className="relative flex items-center">
                   <input 
+                    autoComplete="off"
                     name="email"
                     type="text" 
                     value={email}
@@ -90,6 +92,7 @@ export default function Login() {
                 <label className="text-white-800 text-ms block mb-2">Password</label>
                 <div className="relative flex items-center">
                   <input 
+                  autoComplete="off"
                   name="password" 
                   type={shwpassword ? "text" : "password"} 
                   value={password}
