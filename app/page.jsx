@@ -14,14 +14,18 @@ export default function Login() {
 
     if (!email) {
       toast.error("Email is required !");
+      return false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       toast.error("Email is invalid !");
+      return false;
     }
 
     else if (!password) {
       toast.error("Password is required !");
+      return false;
     } else if (password.length < 6) {
       toast.error("Password must be at least 6 characters !");
+      return false;
     }
      
     return true;
@@ -37,26 +41,13 @@ export default function Login() {
 
    const data = await res.json();
 
-   console.log(data)
-
    if (res.ok) {
-    
+    toast.success(data.message);
    router.push("/dashboard");
    } else {
-    alert(data.error);
+    toast.error(data.error);
    }
 
-    // if(email === process.env.NEXT_PUBLIC_USERNAME){
-    //   if(password === process.env.NEXT_PUBLIC_USERPASSWORD){
-    //     return true;
-    //   }
-    //   else{
-    //     toast.error("Error Pawword Incorrect !");
-    //   }
-    // }
-    // else{
-    //   toast.error("The Email Incorrect !");
-    // }
   }; 
 
   const handleSubmit = (e) => {
