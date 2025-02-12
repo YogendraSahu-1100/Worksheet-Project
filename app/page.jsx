@@ -27,25 +27,42 @@ export default function Login() {
     return true;
   };
 
-  const checkCredential = () => {
-    if(email === process.env.NEXT_PUBLIC_USERNAME){
-      if(password === process.env.NEXT_PUBLIC_USERPASSWORD){
-        return true;
-      }
-      else{
-        toast.error("Error Pawword Incorrect !");
-      }
-    }
-    else{
-      toast.error("The Email Incorrect !");
-    }
+  const checkCredential = async () => {
+
+    const res = await fetch("./api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+   });
+
+   const data = await res.json();
+
+   console.log(data)
+
+   if (res.ok) {
+    
+   router.push("/dashboard");
+   } else {
+    alert(data.error);
+   }
+
+    // if(email === process.env.NEXT_PUBLIC_USERNAME){
+    //   if(password === process.env.NEXT_PUBLIC_USERPASSWORD){
+    //     return true;
+    //   }
+    //   else{
+    //     toast.error("Error Pawword Incorrect !");
+    //   }
+    // }
+    // else{
+    //   toast.error("The Email Incorrect !");
+    // }
   }; 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateForm() && checkCredential()) {
-      toast.success("You Login Successfully !");
-      router.push("/dashboard");
+    if (validateForm()) {
+      checkCredential();
     }
   };
 
