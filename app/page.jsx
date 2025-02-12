@@ -47,7 +47,6 @@ export default function Login() {
    } else {
     toast.error(data.error);
    }
-
   }; 
 
   const handleSubmit = (e) => {
@@ -66,7 +65,7 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
               <div className="mb-6">
                 <h3 className="text-white-800 text-3xl font-extrabold ">Log in </h3>
-                <p className="text-sm mt-4 text-white-800">WorkSheet For Maintain the Work !</p>
+                <p className="text-ms mt-4 text-white-800">WorkSheet For Maintain the Work !</p>
               </div>
 
               <div>
