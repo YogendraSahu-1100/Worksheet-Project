@@ -27,7 +27,6 @@ export default function Login() {
       toast.error("Password must be at least 6 characters !");
       return false;
     }
-     
     return true;
   };
 
