@@ -43,7 +43,7 @@ export default function Login() {
 
    if (res.ok) {
     toast.success(data.message);
-   router.push("/dashboard");
+   router.push("/dashboard/work");
    } else {
     toast.error(data.error);
    }
