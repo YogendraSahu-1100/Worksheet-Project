@@ -8,8 +8,6 @@ export async function POST(req) {
 
         const db = await connectDB();
 
-        // console.log('this is DB Status: -',db);
-
         const [rows] = await db.execute("SELECT * FROM login WHERE UserEmail = ?", [email]);
 
         if(rows.length === 0){

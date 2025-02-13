@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
@@ -141,7 +140,7 @@ export function Navbar() {
                   aria-labelledby="user-menu-button"
                   tabIndex="-1"
                 >
-                  <a
+                  <Link
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
@@ -149,8 +148,8 @@ export function Navbar() {
                     id="user-menu-item-0"
                   >
                     Your Profile
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
@@ -158,16 +157,16 @@ export function Navbar() {
                     id="user-menu-item-1"
                   >
                     Settings
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <Link
+                    href="/"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     id="user-menu-item-2"
                   >
                     Sign out
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
