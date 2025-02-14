@@ -39,10 +39,9 @@ export default function Login() {
    });
 
    const data = await res.json();
-
    if (res.ok) {
+    router.push("/dashboard/work");
     toast.success(data.message);
-   router.push("/dashboard/work");
    } else {
     toast.error(data.error);
    }
