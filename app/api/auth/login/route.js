@@ -1,10 +1,17 @@
+import { jwt } from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { serialize } from "cookie";
+
 const { connectDB } = require("@/lib/dbConnection"); 
 const { NextResponse } = require("next/server");
+
 
 
 export async function POST(req) {
     try{
         const {email , password } = await req.json();
+
+        const SS_password = await bcrypt.hash(password, 10);
 
         const db = await connectDB();
 
@@ -16,7 +23,11 @@ export async function POST(req) {
 
         const data = rows[0];
         
-        if (password != data.UserPassword) {
+        const isPasswordValid = await bcrypt.compare(password, data.UserPassword);
+
+        console.log(isPasswordValid)
+        
+        if (!isPasswordValid) {
             return NextResponse.json({ error: "Invalid Password" }, { status: 401 });
         }
 
