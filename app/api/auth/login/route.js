@@ -11,8 +11,6 @@ export async function POST(req) {
     try{
         const {email , password } = await req.json();
 
-        const SS_password = await bcrypt.hash(password, 10);
-
         const db = await connectDB();
 
         const [rows] = await db.execute("SELECT * FROM login WHERE UserEmail = ?", [email]);
