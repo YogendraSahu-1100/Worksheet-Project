@@ -1,4 +1,4 @@
-import { jwt } from "jsonwebtoken";
+import  jwt  from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { serialize } from "cookie";
 
@@ -22,16 +22,26 @@ export async function POST(req) {
         }
 
         const data = rows[0];
-        
+
         const isPasswordValid = await bcrypt.compare(password, data.UserPassword);
 
-        console.log(isPasswordValid)
-        
+        const token = jwt.sign({ id: data.Id, email: data.UserEmail }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
+
+        console.log(token)
+
         if (!isPasswordValid) {
             return NextResponse.json({ error: "Invalid Password" }, { status: 401 });
         }
 
-        return NextResponse.json({ status: 'success', message: "Login successful", data });
+        const response =  NextResponse.json({ status: 'success', message: "Login successful", data });
+
+        response.headers.set(
+            "Set-cookie", serialize("token",token,{httpOnly:true,path:"/",maxAge: 3600})
+         );
+
+         return response;
     }
     catch (err) {
         console.error("Login Error:", err);

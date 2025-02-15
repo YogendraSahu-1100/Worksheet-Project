@@ -1,10 +1,17 @@
 "use client"
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null); 
+
+  const handlelogout = async ()  => {
+    const res = await fetch("/api/auth/logout", {
+      method: "POST",
+   });
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -164,6 +171,7 @@ export function Navbar() {
                     role="menuitem"
                     tabIndex="-1"
                     id="user-menu-item-2"
+                    onClick={handlelogout}
                   >
                     Sign out
                   </Link>
