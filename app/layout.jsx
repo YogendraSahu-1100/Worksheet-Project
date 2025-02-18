@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
         />
       </body>
     </html>
