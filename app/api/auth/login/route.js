@@ -1,7 +1,6 @@
 import  jwt  from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { serialize } from "cookie";
-
 const { connectDB } = require("@/lib/dbConnection"); 
 const { NextResponse } = require("next/server");
 
@@ -27,8 +26,6 @@ export async function POST(req) {
             expiresIn: "1h",
         });
 
-        console.log(token)
-
         if (!isPasswordValid) {
             return NextResponse.json({ error: "Invalid Password" }, { status: 401 });
         }
@@ -38,7 +35,7 @@ export async function POST(req) {
         response.headers.set(
             "Set-cookie", serialize("token",token,{httpOnly:true,path:"/",maxAge: 3600})
          );
-
+         
          return response;
     }
     catch (err) {

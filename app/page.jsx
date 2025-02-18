@@ -10,25 +10,6 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [shwpassword, setShwpassword] = useState(false);
 
-  const validateForm = () => {
-
-    if (!email) {
-      toast.error("Email is required !");
-      return false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Email is invalid !");
-      return false;
-    }
-
-    else if (!password) {
-      toast.error("Password is required !");
-      return false;
-    } else if (password.length < 6) {
-      toast.error("Password must be at least 6 characters !");
-      return false;
-    }
-    return true;
-  };
 
   const checkCredential = async () => {
 
@@ -39,6 +20,7 @@ export default function Login() {
    });
 
    const data = await res.json();
+
    if (res.ok) {
     router.push("/dashboard/work");
     toast.success(data.message);
@@ -49,9 +31,22 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateForm()) {
+    if (!email) {
+      toast.error("Email is required !");
+      return false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      toast.error("Email is invalid !");
+      return false;
+    }else if (!password) {
+      toast.error("Password is required !");
+      return false;
+    } else if (password.length < 6) {
+      toast.error("Password must be at least 6 characters !");
+      return false;
+    }else{
       checkCredential();
     }
+    
   };
 
   return (
