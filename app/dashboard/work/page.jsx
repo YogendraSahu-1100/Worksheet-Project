@@ -1,188 +1,224 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
+import { useState,useEffect } from "react"
+import { useForm } from "react-hook-form"
 
 export default function Work() {
-  const [formData, setFormData] = useState({
-    id: "",
-    websiteName: "",
-    pageOnWork: "",
-    description: "",
-    date: "",
-  })
-  const [tableData, setTableData] = useState([])
-  const [editMode, setEditMode] = useState(false)
+  const [websites, setWebsites] = useState([])
+  const [editingId, setEditingId] = useState(null)
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (editMode) {
-      setTableData((prev) => prev.map((item) => (item.id === formData.id ? formData : item)))
-      setEditMode(false)
-    } else {
-      setTableData((prev) => [...prev, { ...formData, id: Date.now().toString() }])
-    }
-    setFormData({ id: "", websiteName: "", pageOnWork: "", description: "", date: "" })
-  }
+  useEffect(() => {
+    const mockData = [
+      {
+        id: 1,
+        websiteName: "Example Site",
+        url: "https://example.com",
+        pageName: "Home",
+        description: "An example website",
+        date: "2023-05-01",
+      },
+      {
+        id: 2,
+        websiteName: "Test Site",
+        url: "https://test.com",
+        pageName: "About",
+        description: "A test website",
+        date: "2023-05-02",
+      },
+    ]
+    setWebsites(mockData)
+  }, [])
 
   const handleEdit = (id) => {
-    const itemToEdit = tableData.find((item) => item.id === id)
-    if (itemToEdit) {
-      setFormData(itemToEdit)
-      setEditMode(true)
-    }
+    setEditingId(id)
+  }
+
+  const handleSave = (id) => {
+    setEditingId(null)
   }
 
   const handleDelete = (id) => {
-    setTableData((prev) => prev.filter((item) => item.id !== id))
+    setWebsites(websites.filter((website) => website.id !== id))
+  }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm()
+
+  const onSubmit = (data) => {
+    const newWebsite = {
+      id: Date.now(),
+      ...data,
+    }
+    setWebsites([...websites, newWebsite])
+    reset()
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800 text-gray-100 p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
-        <motion.h1
-          className="text-4xl sm:text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-violet-300"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Work Page Management
-        </motion.h1>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          <motion.div
-            className="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-xl shadow-2xl p-6"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h2 className="text-2xl font-semibold mb-4">{editMode ? "Edit Entry" : "Add New Entry"}</h2>
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="websiteName" className="block text-sm font-medium text-gray-300 mb-1">
-                  Website Name
-                </label>
-                <input
-                  id="websiteName"
-                  name="websiteName"
-                  value={formData.websiteName}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-violet-400 focus:ring focus:ring-violet-300 focus:ring-opacity-50 text-white px-4 py-2 transition duration-200"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="pageOnWork" className="block text-sm font-medium text-gray-300 mb-1">
-                  Page On Work
-                </label>
-                <input
-                  id="pageOnWork"
-                  name="pageOnWork"
-                  value={formData.pageOnWork}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-violet-400 focus:ring focus:ring-violet-300 focus:ring-opacity-50 text-white px-4 py-2 transition duration-200"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-violet-400 focus:ring focus:ring-violet-300 focus:ring-opacity-50 text-white px-4 py-2 transition duration-200 min-h-[100px]"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-300 mb-1">
-                  Date
-                </label>
-                <input
-                  id="date"
-                  name="date"
-                  type="date"
-                  value={formData.date}
-                  onChange={handleInputChange}
-                  className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-violet-400 focus:ring focus:ring-violet-300 focus:ring-opacity-50 text-white px-4 py-2 transition duration-200"
-                />
-              </div>
-
-              <button
-                onClick={handleSave}
-                className="w-full bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-50"
-              >
-                {editMode ? "Update" : "Save"}
-              </button>
-            </form>
-          </motion.div>
-
-          <motion.div
-            className="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-xl shadow-2xl p-6"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <h2 className="text-2xl font-semibold mb-4">Entries</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-700">
-                <thead>
-                  <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Id
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Website
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Page
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700">
-                  {tableData.map((row) => (
-                    <tr key={row.id} className="hover:bg-gray-700 transition-colors duration-200">
-                      <td className="px-6 py-4 whitespace-nowrap">{row.id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{row.websiteName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{row.pageOnWork}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{row.date}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <button
-                          onClick={() => handleEdit(row.id)}
-                          className="text-blue-400 hover:text-blue-300 mr-2 transition duration-200"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(row.id)}
-                          className="text-red-400 hover:text-red-300 transition duration-200"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-        </div>
+    <>
+    <div className="container w-full max-w-9/10">
+    <form onSubmit={handleSubmit(onSubmit)} className="m-8 bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label htmlFor="websiteName" className="block mb-2">
+          Website Name
+        </label>
+        <input
+          id="websiteName"
+          {...register("websiteName", { required: "Website name is required" })}
+          className="w-full p-2 bg-gray-700 rounded"
+          placeholder="Enter Website Name Here"
+        />
+        {errors.websiteName && <span className="text-red-500 text-sm">{errors.websiteName.message}</span>}
+      </div>
+      <div>
+        <label htmlFor="url" className="block mb-2">
+          URL
+        </label>
+        <input
+          id="url"
+          {...register("url", {
+            required: "URL is required",
+            pattern: {
+              value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+              message: "Invalid URL format",
+            },
+          })}
+          className="w-full p-2 bg-gray-700 rounded"
+          placeholder="Example : www.google.com"
+        />
+        {errors.url && <span className="text-red-500 text-sm">{errors.url.message}</span>}
+      </div>
+      <div>
+        <label htmlFor="pageName" className="block mb-2">
+          Page Name
+        </label>
+        <input
+          id="pageName"
+          {...register("pageName", { required: "Page name is required" })}
+          className="w-full p-2 bg-gray-700 rounded"
+          placeholder="Enter Page Name you Work"
+        />
+        {errors.pageName && <span className="text-red-500 text-sm">{errors.pageName.message}</span>}
+      </div>
+      <div>
+        <label htmlFor="date" className="block mb-2">
+          Date
+        </label>
+        <input
+          id="date"
+          type="date"
+          {...register("date", { required: "Date is required" })}
+          className="w-full p-2 bg-gray-700 rounded"
+          defaultValue={new Date().toISOString().split("T")[0]}
+        />
+        {errors.date && <span className="text-red-500 text-sm">{errors.date.message}</span>}
+      </div>
+      <div>
+        <label htmlFor="description" className="block mb-2">
+          Description
+        </label>
+        <textarea
+          id="description"
+          {...register("description", { required: "Description is required" })}
+          className="w-full p-2 bg-gray-700 rounded"
+          placeholder="Enter Description you Work"
+        ></textarea>
+        {errors.description && <span className="text-red-500 text-sm">{errors.description.message}</span>}
       </div>
     </div>
+    <button
+      type="submit"
+      className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+    >
+      Add Website
+    </button>
+  </form>
+  <div className="overflow-x-auto  m-8">
+      <table className="w-full bg-gray-800 rounded-lg shadow-lg">
+        <thead>
+          <tr className="bg-gray-700">
+            <th className="p-3 text-left">ID</th>
+            <th className="p-3 text-left">Website Name</th>
+            <th className="p-3 text-left">URL</th>
+            <th className="p-3 text-left">Page Name</th>
+            <th className="p-3 text-left">Description</th>
+            <th className="p-3 text-left">Date</th>
+            <th className="p-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {websites.map((website) => (
+            <tr key={website.id} className="border-t border-gray-700">
+              <td className="p-3">{website.id}</td>
+              <td className="p-3">
+                {editingId === website.id ? (
+                  <input type="text" defaultValue={website.websiteName} className="bg-gray-700 p-1 rounded" />
+                ) : (
+                  website.websiteName
+                )}
+              </td>
+              <td className="p-3">
+                {editingId === website.id ? (
+                  <input type="text" defaultValue={website.url} className="bg-gray-700 p-1 rounded" />
+                ) : (
+                  website.url
+                )}
+              </td>
+              <td className="p-3">
+                {editingId === website.id ? (
+                  <input type="text" defaultValue={website.pageName} className="bg-gray-700 p-1 rounded" />
+                ) : (
+                  website.pageName
+                )}
+              </td>
+              <td className="p-3">
+                {editingId === website.id ? (
+                  <input type="text" defaultValue={website.description} className="bg-gray-700 p-1 rounded" />
+                ) : (
+                  website.description
+                )}
+              </td>
+              <td className="p-3">
+                {editingId === website.id ? (
+                  <input type="date" defaultValue={website.date} className="bg-gray-700 p-1 rounded" />
+                ) : (
+                  website.date
+                )}
+              </td>
+              <td className="p-3">
+                {editingId === website.id ? (
+                  <button
+                    onClick={() => handleSave(website.id)}
+                    className="bg-green-500 text-white px-2 py-1 rounded mr-2 hover:bg-green-600 transition-colors"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleEdit(website.id)}
+                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-600 transition-colors"
+                  >
+                    Edit
+                  </button>
+                )}
+                <button
+                  onClick={() => handleDelete(website.id)}
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </>
   )
 }
 
