@@ -65,16 +65,16 @@ export default function Work() {
     const worksheet = workbook.addWorksheet("Websites");
 
     worksheet.columns = [
-      { header: "ID", key: "id", width: 10 },
+      { header: "ID", key: "id", width: 5 },
       { header: "Website Name", key: "websiteName", width: 20 },
       { header: "Page Name", key: "pageName", width: 15 },
       { header: "URL", key: "url", width: 30 },
       { header: "Date", key: "date", width: 15 },
-      { header: "Description", key: "description", width: 50 },
+      { header: "Description", key: "description", width: 30 },
     ];
 
     worksheet.getRow(1).eachCell((cell) => {
-      cell.font = { bold: true, color: { argb: "black" } };
+      cell.font = { bold: true, color: { argb: "FFFFFF" } };
       cell.fill = {
         type: "pattern",
         pattern: "solid",
@@ -108,9 +108,10 @@ export default function Work() {
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-
-    saveAs(blob, "WorkSheet.xlsx");
+    saveAs(blob, "WebsitesData.xlsx");
   };
+
+
 
   return (
     <>
