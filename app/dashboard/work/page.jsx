@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import { useForm } from "react-hook-form"
 import "@/app/Components/Btn-style/btn.css"
 
@@ -59,57 +60,57 @@ export default function Work() {
     reset()
   }
 
-  const handleExportCSV = () => {
-    console.log(websites);
+  const handleExportCSV = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Websites");
 
-    const ws = XLSX.utils.json_to_sheet(websites, {
-      header: ["id", "websiteName", "url", "pageName", "description", "date"]
-    });
-
-    const headerRange = XLSX.utils.decode_range(ws["!ref"]);
-    for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (!ws[cellAddress]) continue;
-      ws[cellAddress].s = {
-        font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "4F81BD" } },
-        alignment: { horizontal: "center", vertical: "center" }
-      };
-    }
-
-    ws["!cols"] = [
-      { wch: 5 },
-      { wch: 20 },
-      { wch: 30 },
-      { wch: 15 },
-      { wch: 30 },
-      { wch: 15 }
+    worksheet.columns = [
+      { header: "ID", key: "id", width: 10 },
+      { header: "Website Name", key: "websiteName", width: 20 },
+      { header: "Page Name", key: "pageName", width: 15 },
+      { header: "URL", key: "url", width: 30 },
+      { header: "Date", key: "date", width: 15 },
+      { header: "Description", key: "description", width: 50 },
     ];
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Websites");
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true, color: { argb: "black" } };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "4F81BD" },
+      };
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+    });
 
-    const range = XLSX.utils.decode_range(ws["!ref"]);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-        if (!ws[cellAddress]) continue;
-        ws[cellAddress].s = {
-          border: {
-            top: { style: "thin", color: { auto: 1 } },
-            bottom: { style: "thin", color: { auto: 1 } },
-            left: { style: "thin", color: { auto: 1 } },
-            right: { style: "thin", color: { auto: 1 } }
-          },
-          alignment: { horizontal: "center", vertical: "center" }
+    websites.forEach((data) => {
+      worksheet.addRow(data);
+    });
+
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
         };
-      }
-    }
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+      });
+    });
 
-    XLSX.writeFile(wb, "WebsitesData.xlsx");
+    worksheet.autoFilter = {
+      from: { row: 1, column: 1 },
+      to: { row: worksheet.rowCount, column: worksheet.columnCount },
+    };
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(blob, "WorkSheet.xlsx");
   };
-
-
 
   return (
     <>
