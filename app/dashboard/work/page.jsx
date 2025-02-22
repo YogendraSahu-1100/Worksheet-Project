@@ -111,8 +111,6 @@ export default function Work() {
     saveAs(blob, "WebsitesData.xlsx");
   };
 
-
-
   return (
     <>
       <div className="container w-full max-w-9/10">
@@ -278,7 +276,6 @@ export default function Work() {
           </span>
           <p className="text">Download Excel</p>
         </button>
-
 
         <div className="overflow-x-auto  m-8">
           <table className="w-full bg-gray-800 rounded-lg shadow-lg">
